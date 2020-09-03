@@ -27,6 +27,10 @@ client.on('message', (msg) => {
     if(msg.author.id === '428680925228957696'){
         msg.react('751128488638939217');
     }
+    
+    if(msg.author.id === '547891105048297472'){
+        msg.react('751138922234642505');
+    }
 
     if(msg.content.toLowerCase() === `${prefix}set`) {
         if(remind[msg.author.id]) return msg.channel.send('You are already in the reminder list.');
