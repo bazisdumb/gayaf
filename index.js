@@ -1,5 +1,6 @@
 require('dotenv').config();
 const ms = require('ms');
+const fs = require('fs');
 const remind = require('./reminders.json');
 const { Client, MessageEmbed } = require('discord.js');
 const client = new Client();
@@ -22,16 +23,20 @@ client.on('message', (msg) => {
 
     if(msg.author.id === '276273030177619968'){
         msg.react('751089272446124113');
-    }
+    };
 
     if(msg.author.id === '428680925228957696'){
         msg.react('751128488638939217');
-    }
-    
-    if(msg.author.id === '547891105048297472'){
-        msg.react('751138922234642505');
-    }
+    };
 
+    if(msg.content.toLowerCase() === `${prefix}invite`){
+        const inviteEmbed = new MessageEmbed()
+        .setTitle('Click here to invite this bot to your server.')
+        .setURL('https://discord.com/api/oauth2/authorize?client_id=739816330580066335&permissions=85056&scope=bot')
+        .setColor('BLUE');
+        msg.channel.send(inviteEmbed);
+    };
+    
     if(msg.content.toLowerCase() === `${prefix}set`) {
         if(remind[msg.author.id]) return msg.channel.send('You are already in the reminder list.');
         remind[msg.author.id] = {
@@ -44,16 +49,12 @@ client.on('message', (msg) => {
             'daily': false,
             'time': null
         };
+        fs.writeFile('./reminders.json', JSON.stringify(remind, null , 2), (err) => {
+            if(err)
+            console.log(err);
+        })
         msg.channel.send('Successfully added to the reminders list. Please use \`!config\` to set your reminders.');
         //console.log(remind);
-    };
-
-    if(msg.content.toLowerCase() === `${prefix}invite`){
-        const inviteEmbed = new MessageEmbed()
-        .setTitle('Click here to invite this bot to your server.')
-        .setURL('https://discord.com/api/oauth2/authorize?client_id=739816330580066335&permissions=85056&scope=bot')
-        .setColor('BLUE');
-        msg.channel.send(inviteEmbed);
     };
 
     if(remind[msg.author.id]){
@@ -122,11 +123,19 @@ client.on('message', (msg) => {
     function config(m){
         if (remind[msg.author.id][m]){
             remind[msg.author.id][m] = false;
+            fs.writeFile('./reminders.json', JSON.stringify(remind, null , 2), (err) => {
+                if(err)
+                console.log(err);
+            })
             msg.channel.send(`Disabled reminders for ${m}.`);
             //console.log(remind);
         }
         else {
             remind[msg.author.id][m] = true;
+            fs.writeFile('./reminders.json', JSON.stringify(remind, null , 2), (err) => {
+                if(err)
+                console.log(err);
+            })
             msg.channel.send(`Enabled reminders for ${m}.`);
             //console.log(remind);
         } 
