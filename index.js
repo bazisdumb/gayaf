@@ -61,7 +61,7 @@ client.on('message', (msg) => {
 
     if(msg.content.toLowerCase() === `${prefix}config`){
         const embed = new MessageEmbed()
-        .setDescription('This is your current configuration.\n \`false\` represents that the reminders are currently disabled for the corresponding command, and \`true\` represents that they are enabled.\n\`null\` in \`!set-timer\` represents that there is currently no custom raid timer set. The time shown is in seconds and you should also be using seconds while setting a custom timer for your raids.\nTo change it please use command listed, like \`!raid\`')
+        .setDescription('This is your current configuration.\n \`false\` represents that the reminders are currently disabled for the corresponding command, and \`true\` represents that they are enabled.\n\`null\` in \`!set-time\` represents that there is currently no custom raid timer set. The time shown is in seconds and you should also be using seconds while setting a custom timer for your raids.\nTo change it please use command listed, like \`!raid\`')
         .addFields(
             {name: 'Raid (\`!raid\`)', value: remind[msg.author.id]['ppr'], inline: true},
             {name: 'Mine (\`!mine\`)', value: remind[msg.author.id]['ppm'], inline: true},
@@ -83,7 +83,7 @@ client.on('message', (msg) => {
         const args = msg.content.trim().split(/ +/);
         const customTime = args[1];
         if (customTime){
-        if(isNaN(customTime)) return msg.channel.send('Please provide with a correct time in seconds.');
+        if(isNaN(customTime) || customTime < 0) return msg.channel.send('Please provide with a correct time in seconds.');
         remind[msg.author.id]['time'] = customTime;
         msg.channel.send(`Set your raid reminder time to ${customTime} seconds. To reset it please use \`!set-time\``)
         }
